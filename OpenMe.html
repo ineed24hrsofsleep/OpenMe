@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Franze Marie M. Bermejo Only.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .heart {
+            position: fixed;
+            color: #f87171;
+            animation: burst var(--duration) ease-out forwards;
+            pointer-events: none;
+        }
+        .flower {
+            position: fixed;
+            font-size: var(--size);
+            animation: burst var(--duration) ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes burst {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(var(--scale));
+            }
+        }
+        #message {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-rose-50 to-pink-100 min-h-screen flex flex-col items-center justify-center p-4 font-['Caveat']">
+    <div class="text-center relative">
+        <h1 class="text-4xl md:text-5xl font-bold text-rose-600 mb-6 animate-pulse">To Someone Special...</h1>
+        <p class="text-lg md:text-2xl text-rose-800 mb-8">My heart has something to say...</p>
+        <button id="revealBtn" class="bg-rose-400 text-white font-semibold py-3 px-6 rounded-full hover:bg-rose-500 transition duration-300 transform hover:scale-105">
+            Open My Heart
+        </button>
+        <div id="heartContainer" class="mt-8 hidden">
+            <div class="w-24 h-24 mx-auto animate-pulse text-rose-500 text-6xl flex items-center justify-center">🌸</div>
+            <p id="message" class="text-xl md:text-2xl font-bold text-rose-700 mt-4 opacity-0 transition-opacity duration-1000 max-w-md mx-auto"></p>
+        </div>
+        <div id="popoutHearts" class="fixed inset-0 pointer-events-none"></div>
+    </div>
+
+    <script>
+        const revealBtn = document.getElementById('revealBtn');
+        const heartContainer = document.getElementById('heartContainer');
+        const message = document.getElementById('message');
+        const popoutHearts = document.getElementById('popoutHearts');
+
+        const specificMessage = "Franze Marie M. Bermejo, I’ve got a plan — tea, laughs, and a trip to the shooting range. Just us, having fun and making memories. Don’t worry, I won’t take no for an answer this time.\n\nBest regards, \nRed";
+
+        function createHeartCluster(x, y) {
+            const heartCount = Math.floor(Math.random() * 5 + 3);
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                const size = Math.random() * 15 + 10;
+                heart.style.width = `${size}px`;
+                heart.style.height = `${size}px`;
+                heart.innerHTML = '<svg class="w-full h-full" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+                heart.style.left = `${x}px`;
+                heart.style.top = `${y}px`;
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = Math.random() * 300 + 100;
+                const tx = `${Math.cos(angle) * distance}px`;
+                const ty = `${Math.sin(angle) * distance}px`;
+                const duration = Math.random() * 2 + 2;
+                const scale = Math.random() * 1 + 1.5;
+                heart.style.setProperty('--tx', tx);
+                heart.style.setProperty('--ty', ty);
+                heart.style.setProperty('--duration', `${duration}s`);
+                heart.style.setProperty('--scale', scale);
+                popoutHearts.appendChild(heart);
+                setTimeout(() => heart.remove(), duration * 1000);
+            }
+        }
+
+        function createFlowerCluster(x, y) {
+            const flowerCount = Math.floor(Math.random() * 5 + 3);
+            for (let i = 0; i < flowerCount; i++) {
+                const flower = document.createElement('div');
+                flower.classList.add('flower');
+                const size = Math.random() * 15 + 10;
+                flower.style.setProperty('--size', `${size}px`);
+                flower.textContent = '🌸';
+                flower.style.left = `${x}px`;
+                flower.style.top = `${y}px`;
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = Math.random() * 300 + 100;
+                const tx = `${Math.cos(angle) * distance}px`;
+                const ty = `${Math.sin(angle) * distance}px`;
+                const duration = Math.random() * 2 + 2;
+                const scale = Math.random() * 1 + 1.5;
+                flower.style.setProperty('--tx', tx);
+                flower.style.setProperty('--ty', ty);
+                flower.style.setProperty('--duration', `${duration}s`);
+                flower.style.setProperty('--scale', scale);
+                popoutHearts.appendChild(flower);
+                setTimeout(() => flower.remove(), duration * 1000);
+            }
+        }
+
+        revealBtn.addEventListener('click', () => {
+            revealBtn.classList.add('hidden');
+            heartContainer.classList.remove('hidden');
+            setTimeout(() => {
+                message.textContent = specificMessage;
+                message.classList.remove('opacity-0');
+            }, 500);
+
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * 20 + 40;
+                    const y = Math.random() * 20 + 40;
+                    createFlowerCluster(window.innerWidth * (x / 100), window.innerHeight * (y / 100));
+                }, i * 400);
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            createHeartCluster(e.clientX, e.clientY);
+        });
+
+        let lastMove = 0;
+        document.addEventListener('mousemove', (e) => {
+            const now = Date.now();
+            if (now - lastMove > 100) {
+                createHeartCluster(e.clientX, e.clientY);
+                lastMove = now;
+            }
+        });
+    </script>
+</body>
+</html>
