@@ -152,8 +152,8 @@
     <div id="backgroundParticles" class="fixed inset-0 pointer-events-none"></div>
     <div class="text-center relative">
         <h1 id="greeting" class="text-4xl md:text-5xl font-bold text-rose-600 mb-6"></h1>
-        <p class="text-lg md:text-2xl text-rose-800 mb-4">My heart has something to say...</p>
-        <p class="text-lg md:text-xl text-rose-700 mb-6">I hope this finds you well. Don't forget to smile before clicking the button 😊</p>
+        <p id="heartMessage" class="text-lg md:text-2xl text-rose-800 mb-4"></p>
+        <p id="smileMessage" class="text-lg md:text-xl text-rose-700 mb-6"></p>
         <button id="revealBtn" class="bg-rose-400 text-white font-semibold py-3 px-6 rounded-full hover:bg-rose-500 transition duration-300 transform hover:scale-105">
             Open My Heart
         </button>
@@ -164,7 +164,7 @@
                 <div class="bouquet-flower" style="top: 7px; left: 20px; transform: rotate(-20deg); font-size: 48px;">🌹</div>
                 <div class="bouquet-flower" style="top: 28px; left: 100px; transform: rotate(10deg); font-size: 36px;">🌼</div>
                 <div class="bouquet-flower" style="top: 20px; left: 50px; transform: rotate(-15deg); font-size: 42px;">🌺</div>
-                <div class="bouquet-flower" style="top: 42px; left: 80px; transform: rotate(5deg); font-size: 46px;">🌸</div>
+                <div class="bouquet-flower" style="top: 42px; left: 80px; transform: rotate(15deg); font-size: 46px;">🌸</div>
                 <div class="bouquet-flower" style="top: 35px; left: 120px; transform: rotate(-10deg); font-size: 38px;">🌷</div>
                 <div class="bouquet-flower" style="top: 55px; left: 90px; transform: rotate(0deg); font-size: 44px;">🌹</div>
                 <div class="bouquet-flower" style="top: 50px; left: 40px; transform: rotate(-5deg); font-size: 40px;">🌼</div>
@@ -193,12 +193,35 @@
 
     <script>
 
-        new Typed('#greeting', {
+        const greetingTyped = new Typed('#greeting', {
             strings: ["To Ms. Franze Marie M. Bermejo :>"],
             typeSpeed: 50,
             showCursor: false,
             startDelay: 500,
+            onComplete: () => {
+                heartMessageTyped.start();
+            }
         });
+
+        const heartMessageTyped = new Typed('#heartMessage', {
+            strings: ["My heart has something to say..."],
+            typeSpeed: 50,
+            showCursor: false,
+            startDelay: 0,
+            onComplete: () => {
+                smileMessageTyped.start();
+            }
+        });
+
+        const smileMessageTyped = new Typed('#smileMessage', {
+            strings: ["I hope this finds you well. Don't forget to smile before clicking the button 😊"],
+            typeSpeed: 50,
+            showCursor: false,
+            startDelay: 0
+        });
+
+        heartMessageTyped.stop();
+        smileMessageTyped.stop();
 
         const backgroundParticles = document.getElementById('backgroundParticles');
         function createBackgroundParticle() {
