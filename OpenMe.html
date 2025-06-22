@@ -54,14 +54,14 @@
         const message = document.getElementById('message');
         const popoutHearts = document.getElementById('popoutHearts');
 
-       const specificMessage = "So here’s the idea — tea, some good conversation, and a chill hangout, just the two of us. Nothing fancy, just time well spent. Who knows? It might just turn into one of those days we’ll smile about later. Say yes, pretty please?\n\nBest regards,\nRed";
+        const specificMessage = "So here’s the idea — tea, some good conversation, and a chill hangout, just the two of us. Nothing fancy, just time well spent. Who knows? It might just turn into one of those days we’ll smile about later. Say yes, pretty please?\n\nBest regards,\nRed";
 
-        function createHeartCluster(x, y) {
-            const heartCount = Math.floor(Math.random() * 5 + 3);
+        function createHeartCluster(x, y, isClick = false) {
+            const heartCount = isClick ? Math.floor(Math.random() * 10 + 8) : Math.floor(Math.random() * 5 + 3);
             for (let i = 0; i < heartCount; i++) {
                 const heart = document.createElement('div');
                 heart.classList.add('heart');
-                const size = Math.random() * 15 + 10;
+                const size = Math.random() * 8 + 5;
                 heart.style.width = `${size}px`;
                 heart.style.height = `${size}px`;
                 heart.innerHTML = '<svg class="w-full h-full" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
@@ -82,12 +82,12 @@
             }
         }
 
-        function createFlowerCluster(x, y) {
-            const flowerCount = Math.floor(Math.random() * 5 + 3);
+        function createFlowerCluster(x, y, isClick = false) {
+            const flowerCount = isClick ? Math.floor(Math.random() * 10 + 8) : Math.floor(Math.random() * 5 + 3);
             for (let i = 0; i < flowerCount; i++) {
                 const flower = document.createElement('div');
                 flower.classList.add('flower');
-                const size = Math.random() * 15 + 10;
+                const size = Math.random() * 8 + 5;
                 flower.style.setProperty('--size', `${size}px`);
                 flower.textContent = '🌸';
                 flower.style.left = `${x}px`;
@@ -125,7 +125,8 @@
         });
 
         document.addEventListener('click', (e) => {
-            createHeartCluster(e.clientX, e.clientY);
+            createHeartCluster(e.clientX, e.clientY, true);
+            createFlowerCluster(e.clientX, e.clientY, true);
         });
 
         let lastMove = 0;
@@ -133,6 +134,7 @@
             const now = Date.now();
             if (now - lastMove > 100) {
                 createHeartCluster(e.clientX, e.clientY);
+                createFlowerCluster(e.clientX, e.clientY);
                 lastMove = now;
             }
         });
