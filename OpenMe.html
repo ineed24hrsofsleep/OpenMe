@@ -58,11 +58,25 @@
         #message {
             white-space: pre-wrap;
         }
+        input[type="date"] {
+            font-family: 'Caveat', cursive;
+            font-size: 1.25rem;
+            color: #9f1239;
+            background-color: #fef2f2;
+            border: 2px solid #fb7185;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            outline: none;
+            width: 200px;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(316deg) brightness(95%) contrast(87%);
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-rose-50 to-pink-100 min-h-screen flex flex-col items-center justify-center p-4 font-['Caveat']">
     <div class="text-center relative">
-        <h1 class="text-4xl md:text-5xl font-bold text-rose-600 mb-6 animate-pulse">To Franze Marie M. Bermejo :></h1>
+        <h1 class="text-4xl md:text-5xl font-bold text-rose-600 mb-6 animate-pulse">To Ms. Franze Marie M. Bermejo :></h1>
         <p class="text-lg md:text-2xl text-rose-800 mb-8">My heart has something to say...</p>
         <button id="revealBtn" class="bg-rose-400 text-white font-semibold py-3 px-6 rounded-full hover:bg-rose-500 transition duration-300 transform hover:scale-105">
             Open My Heart
@@ -89,6 +103,14 @@
                 <div class="bouquet-leaf" style="top: 105px; left: 100px; transform: rotate(15deg);">🍃</div>
             </div>
             <p id="message" class="text-xl md:text-2xl font-bold text-rose-700 mt-2 opacity-0 transition-opacity duration-1000 max-w-md mx-auto"></p>
+            <div id="dateContainer" class="mt-4 flex flex-col items-center gap-4">
+                <p class="text-lg md:text-xl text-rose-600 font-semibold">Please select a date of your choice</p>
+                <input type="date" id="datePicker" class="focus:ring-2 focus:ring-rose-400" required>
+                <button id="sendDateBtn" class="bg-rose-400 text-white font-semibold py-2 px-4 rounded-full hover:bg-rose-500 transition duration-300 transform hover:scale-105">
+                    Send Date via Instagram
+                </button>
+            </div>
+            <p class="text-lg text-rose-600 font-semibold mt-4 max-w-md mx-auto">Note: After selecting a date, click ‘Send Date via Instagram’ to copy the date and send it to me via DM. Since clicking the link will open up a browwer, make sure that your IG is logged in to that browser.</p>
         </div>
         <div id="popoutHearts" class="fixed inset-0 pointer-events-none"></div>
     </div>
@@ -98,6 +120,8 @@
         const heartContainer = document.getElementById('heartContainer');
         const message = document.getElementById('message');
         const popoutHearts = document.getElementById('popoutHearts');
+        const datePicker = document.getElementById('datePicker');
+        const sendDateBtn = document.getElementById('sendDateBtn');
 
         const specificMessage = "So here’s the idea — tea, some good conversation, and a chill hangout, just the two of us. Nothing fancy, just time well spent. Who knows? It might just turn into one of those days we’ll smile about later. Say yes, pretty please?\n\nBest regards,\nRed";
 
@@ -152,6 +176,12 @@
             }
         }
 
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
         revealBtn.addEventListener('click', () => {
             revealBtn.classList.add('hidden');
             heartContainer.classList.remove('hidden');
@@ -166,6 +196,37 @@
                     const y = Math.random() * 20 + 40;
                     createFlowerCluster(window.innerWidth * (x / 100), window.innerHeight * (y / 100));
                 }, i * 400);
+            }
+        });
+
+        sendDateBtn.addEventListener('click', () => {
+            if (datePicker.value) {
+                const instagramUsername = 'chnakkk_';
+                const deepLink = `instagram://direct?username=${instagramUsername}`;
+                const fallbackUrl = `https://www.instagram.com/direct/new/?username=${instagramUsername}`;
+                const formattedDate = formatDate(datePicker.value);
+                
+                navigator.clipboard.writeText(formattedDate)
+                    .then(() => {
+                        alert(`Date "${formattedDate}" copied to clipboard! Paste it in your DM to me. If you're not logged into Instagram in your browser, please log in to send the message.`);
+                        
+                        window.location.href = deepLink;
+                        
+                        setTimeout(() => {
+                            window.location.href = fallbackUrl;
+                        }, 500);
+                    })
+                    .catch(() => {
+                        alert(`Date "${formattedDate}" selected, but failed to copy to clipboard. Please mention "${formattedDate}" in your DM to me. If you're not logged into Instagram in your browser, please log in to send the message.`);
+                        
+                        window.location.href = deepLink;
+                        
+                        setTimeout(() => {
+                            window.location.href = fallbackUrl;
+                        }, 500);
+                    });
+            } else {
+                alert('Please select a date first!');
             }
         });
 
