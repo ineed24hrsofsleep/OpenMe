@@ -19,6 +19,24 @@
             animation: burst var(--duration) ease-out forwards;
             pointer-events: none;
         }
+        .bouquet {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        .bouquet-flower {
+            position: absolute;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+        }
+        .bouquet-leaf {
+            position: absolute;
+            font-size: 32px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
         @keyframes burst {
             0% {
                 opacity: 1;
@@ -27,6 +45,14 @@
             100% {
                 opacity: 0;
                 transform: translate(var(--tx), var(--ty)) scale(var(--scale));
+            }
+        }
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
             }
         }
         #message {
@@ -42,8 +68,27 @@
             Open My Heart
         </button>
         <div id="heartContainer" class="mt-8 hidden">
-            <div class="w-24 h-24 mx-auto animate-pulse text-rose-500 text-6xl flex items-center justify-center">🌸</div>
-            <p id="message" class="text-xl md:text-2xl font-bold text-rose-700 mt-4 opacity-0 transition-opacity duration-1000 max-w-md mx-auto"></p>
+            <div class="bouquet">
+                <div class="bouquet-flower" style="top: 0; left: 90px; transform: rotate(15deg); font-size: 44px;">🌸</div>
+                <div class="bouquet-flower" style="top: 14px; left: 130px; transform: rotate(25deg); font-size: 40px;">🌷</div>
+                <div class="bouquet-flower" style="top: 7px; left: 20px; transform: rotate(-20deg); font-size: 48px;">🌹</div>
+                <div class="bouquet-flower" style="top: 28px; left: 100px; transform: rotate(10deg); font-size: 36px;">🌼</div>
+                <div class="bouquet-flower" style="top: 20px; left: 50px; transform: rotate(-15deg); font-size: 42px;">🌺</div>
+                <div class="bouquet-flower" style="top: 42px; left: 80px; transform: rotate(5deg); font-size: 46px;">🌸</div>
+                <div class="bouquet-flower" style="top: 35px; left: 120px; transform: rotate(-10deg); font-size: 38px;">🌷</div>
+                <div class="bouquet-flower" style="top: 55px; left: 90px; transform: rotate(0deg); font-size: 44px;">🌹</div>
+                <div class="bouquet-flower" style="top: 50px; left: 40px; transform: rotate(-5deg); font-size: 40px;">🌼</div>
+                <div class="bouquet-flower" style="top: 65px; left: 80px; transform: rotate(20deg); font-size: 42px;">🌺</div>
+                <div class="bouquet-flower" style="top: 60px; left: 110px; transform: rotate(15deg); font-size: 36px;">🌸</div>
+                <div class="bouquet-flower" style="top: 30px; left: 60px; transform: rotate(0deg); font-size: 38px;">🌷</div>
+                <div class="bouquet-flower" style="top: 70px; left: 50px; transform: rotate(-10deg); font-size: 42px;">🌹</div>
+                <div class="bouquet-flower" style="top: 45px; left: 140px; transform: rotate(20deg); font-size: 46px;">🌺</div>
+                <div class="bouquet-leaf" style="top: 90px; left: 20px; transform: rotate(-30deg);">🍃</div>
+                <div class="bouquet-leaf" style="top: 95px; left: 130px; transform: rotate(30deg);">🍃</div>
+                <div class="bouquet-leaf" style="top: 100px; left: 50px; transform: rotate(-15deg);">🍃</div>
+                <div class="bouquet-leaf" style="top: 105px; left: 100px; transform: rotate(15deg);">🍃</div>
+            </div>
+            <p id="message" class="text-xl md:text-2xl font-bold text-rose-700 mt-2 opacity-0 transition-opacity duration-1000 max-w-md mx-auto"></p>
         </div>
         <div id="popoutHearts" class="fixed inset-0 pointer-events-none"></div>
     </div>
