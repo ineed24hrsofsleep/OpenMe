@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For Franze Marie M. Bermejo Only.</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
     <style>
         .heart {
@@ -41,6 +43,22 @@
             opacity: 0;
             animation: arrange 0.5s ease-out forwards;
         }
+        .background-particle {
+            position: fixed;
+            font-size: 20px;
+            opacity: 0.3;
+            pointer-events: none;
+            animation: float var(--duration) ease-in-out infinite;
+            z-index: -1;
+        }
+        .cursor-trail {
+            position: fixed;
+            font-size: 10px;
+            color: #fb7185;
+            pointer-events: none;
+            animation: fade 1s ease-out forwards;
+            z-index: 1000;
+        }
         @keyframes burst {
             0% {
                 opacity: 1;
@@ -69,6 +87,27 @@
                 transform: translateY(0) scale(1);
             }
         }
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(var(--drift));
+                opacity: 0;
+            }
+        }
+        @keyframes fade {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
         #message {
             white-space: pre-wrap;
         }
@@ -85,6 +124,9 @@
         }
         input[type="date"]::-webkit-calendar-picker-indicator {
             filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(316deg) brightness(95%) contrast(87%);
+        }
+        body {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="red" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'), auto;
         }
         .bouquet-flower:nth-child(1) { animation-delay: 0.1s; }
         .bouquet-flower:nth-child(2) { animation-delay: 0.2s; }
@@ -107,9 +149,11 @@
     </style>
 </head>
 <body class="bg-gradient-to-br from-rose-50 to-pink-100 min-h-screen flex flex-col items-center justify-center p-4 font-['Caveat']">
+    <div id="backgroundParticles" class="fixed inset-0 pointer-events-none"></div>
     <div class="text-center relative">
-        <h1 class="text-4xl md:text-5xl font-bold text-rose-600 mb-6 animate-pulse">To Ms. Franze Marie M. Bermejo :></h1>
-        <p class="text-lg md:text-2xl text-rose-800 mb-8">My heart has something to say...</p>
+        <h1 id="greeting" class="text-4xl md:text-5xl font-bold text-rose-600 mb-6"></h1>
+        <p class="text-lg md:text-2xl text-rose-800 mb-4">My heart has something to say...</p>
+        <p class="text-lg md:text-xl text-rose-700 mb-6">I hope this finds you well. Don't forget to smile before clicking the button 😊</p>
         <button id="revealBtn" class="bg-rose-400 text-white font-semibold py-3 px-6 rounded-full hover:bg-rose-500 transition duration-300 transform hover:scale-105">
             Open My Heart
         </button>
@@ -148,6 +192,30 @@
     </div>
 
     <script>
+
+        new Typed('#greeting', {
+            strings: ["To Ms. Franze Marie M. Bermejo :>"],
+            typeSpeed: 50,
+            showCursor: false,
+            startDelay: 500,
+        });
+
+        const backgroundParticles = document.getElementById('backgroundParticles');
+        function createBackgroundParticle() {
+            const particle = document.createElement('div');
+            particle.classList.add('background-particle');
+            particle.textContent = Math.random() > 0.5 ? '❤️' : '🌸';
+            particle.style.left = `${Math.random() * 100}vw`;
+            particle.style.top = `${Math.random() * 100}vh`;
+            const duration = Math.random() * 10 + 10;
+            const drift = (Math.random() - 0.5) * 100;
+            particle.style.setProperty('--duration', `${duration}s`);
+            particle.style.setProperty('--drift', `${drift}px`);
+            backgroundParticles.appendChild(particle);
+            setTimeout(() => particle.remove(), duration * 1000);
+        }
+        setInterval(createBackgroundParticle, 500);
+
         const revealBtn = document.getElementById('revealBtn');
         const heartContainer = document.getElementById('heartContainer');
         const message = document.getElementById('message');
@@ -233,6 +301,12 @@
 
         sendDateBtn.addEventListener('click', () => {
             if (datePicker.value) {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#f87171', '#fb7185', '#fef2f2'],
+                });
                 const instagramUsername = 'chnakkk_';
                 const deepLink = `instagram://direct?username=${instagramUsername}`;
                 const fallbackUrl = `https://www.instagram.com/direct/new/?username=${instagramUsername}`;
@@ -273,6 +347,13 @@
             if (now - lastMove > 100) {
                 createHeartCluster(e.clientX, e.clientY);
                 createFlowerCluster(e.clientX, e.clientY);
+                const trail = document.createElement('div');
+                trail.classList.add('cursor-trail');
+                trail.textContent = '❤️';
+                trail.style.left = `${e.clientX}px`;
+                trail.style.top = `${e.clientY}px`;
+                document.body.appendChild(trail);
+                setTimeout(() => trail.remove(), 1000);
                 lastMove = now;
             }
         });
